@@ -33,12 +33,17 @@ class BullAndCows {
             if (!guessed.contains(ch)) {
                 if (num[i] == ch) {
                     ++bulls;
-                } else if (digits.contains(ch)) {
-                    ++cows;
+                    guessed.add(ch);
                 }
-                guessed.add(ch);
             }
             ++i;
+        }
+        for (char ch : input.toCharArray()) {
+            if (digits.contains(ch)) {
+                if (!guessed.contains(ch)) {
+                    ++cows;
+                }
+            }
         }
         if (cows == 0 && bulls == 0) {
             return "None.";
@@ -65,25 +70,25 @@ class BullAndCows {
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        System.out.println("Please, enter the secret code's length:");
         int length = sc.nextInt();
         if (length > 10) {
             System.out.printf("Error: can't generate a secret number with a length of %d because there aren't enough unique digits.", length);
         } else {
             BullAndCows numberCheck = new BullAndCows(length);
-//        System.out.println("The secret code is prepared: ****.");
-//        String res;
-//            String input = sc.next();
-//        int i = 1;
-//        do {
-//            System.out.printf("Turn %d. Answer:%n", i);
-//            input = sc.next();
-//            res = numberCheck.check(input);
-//            ++i;
-//            System.out.println("Grade: " + res);
-//        } while(!res.equals("4 bulls."));
-//        System.out.printf("Congrats! The secret code is %s.", input);
-//            System.out.print("Grade: " + numberCheck.check(input));
-            System.out.printf("The random secret number is %s.", numberCheck.getNum());
+//            System.out.println("The secret code is prepared: ****.");
+            System.out.println("Okay, let's start a game!");
+            String ending = length + " bulls.";
+            String res;
+            String input;
+            int i = 1;
+            do {
+                System.out.println("Turn " + i++ + ":");
+                input = sc.next();
+                res = numberCheck.check(input);
+                System.out.println("Grade: " + res);
+            } while(!res.equals(ending));
+            System.out.println("Congratulations! You guessed the secret code.");
         }
     }
 }
