@@ -51,9 +51,9 @@ class BullAndCows {
                     cows + " cow" + (cows > 1 ? "s." : ".");
         }
     }
-    public BullAndCows() {
+    public BullAndCows(int length) {
         this.chars = 10;
-        this.length = 4;
+        this.length = length;
         digits = new LinkedHashSet<>();
         generate();
     }
@@ -65,10 +65,14 @@ class BullAndCows {
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        BullAndCows numberCheck = new BullAndCows();
+        int length = sc.nextInt();
+        if (length > 10) {
+            System.out.printf("Error: can't generate a secret number with a length of %d because there aren't enough unique digits.", length);
+        } else {
+            BullAndCows numberCheck = new BullAndCows(length);
 //        System.out.println("The secret code is prepared: ****.");
 //        String res;
-        String input = sc.next();
+//            String input = sc.next();
 //        int i = 1;
 //        do {
 //            System.out.printf("Turn %d. Answer:%n", i);
@@ -78,7 +82,8 @@ public class Main {
 //            System.out.println("Grade: " + res);
 //        } while(!res.equals("4 bulls."));
 //        System.out.printf("Congrats! The secret code is %s.", input);
-        System.out.print("Grade: " + numberCheck.check(input));
-        System.out.printf(" The secret code is %s.", numberCheck.getNum());
+//            System.out.print("Grade: " + numberCheck.check(input));
+            System.out.printf("The random secret number is %s.", numberCheck.getNum());
+        }
     }
 }
