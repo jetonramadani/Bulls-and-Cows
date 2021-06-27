@@ -18,7 +18,7 @@ class BullAndCows {
     private void generate() {
         digits.clear();
         while (digits.size() != length) {
-            char ch = getValue(rand.nextInt(length));
+            char ch = getValue(rand.nextInt(chars));
             digits.add(ch);
         }
         num = new Character[length];
@@ -33,7 +33,7 @@ class BullAndCows {
             if (!guessed.contains(ch)) {
                 if (num[i] == ch) {
                     ++bulls;
-                } else if (digits.contains(num[i])) {
+                } else if (digits.contains(ch)) {
                     ++cows;
                 }
                 guessed.add(ch);
@@ -47,7 +47,7 @@ class BullAndCows {
         } else if (cows == 0) {
             return bulls + " bull" + (bulls > 1 ? "s." : ".");
         } else {
-            return bulls + " bull" + (bulls > 1 ? "s and" : "and") +
+            return bulls + " bull" + (bulls > 1 ? "s and " : " and ") +
                     cows + " cow" + (cows > 1 ? "s." : ".");
         }
     }
@@ -58,16 +58,17 @@ class BullAndCows {
         generate();
     }
     public String getNum() {
-        return digits.toString();
+        return digits.toString().substring(1, length * 3 - 1)
+                .replaceAll(", ", "");
     }
 }
 public class Main {
     public static void main(String[] args) {
-//        Scanner sc = new Scanner(System.in);
-//        BullAndCows numberCheck = new BullAndCows();
+        Scanner sc = new Scanner(System.in);
+        BullAndCows numberCheck = new BullAndCows();
 //        System.out.println("The secret code is prepared: ****.");
 //        String res;
-//        String input;
+        String input = sc.next();
 //        int i = 1;
 //        do {
 //            System.out.printf("Turn %d. Answer:%n", i);
@@ -77,13 +78,7 @@ public class Main {
 //            System.out.println("Grade: " + res);
 //        } while(!res.equals("4 bulls."));
 //        System.out.printf("Congrats! The secret code is %s.", input);
-        System.out.println("The secret code is prepared: ****.\n" +
-                "\n" +
-                "Turn 1. Answer:\n" +
-                "1234\n" +
-                "Grade: 1 cow.\n" +
-                "\n" +
-                "Turn 2. Answer:\n" +
-                "5678\n");
+        System.out.print("Grade: " + numberCheck.check(input));
+        System.out.printf(" The secret code is %s.", numberCheck.getNum());
     }
 }
