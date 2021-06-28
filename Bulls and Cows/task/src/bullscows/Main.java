@@ -17,9 +17,11 @@ class BullAndCows {
     }
     private void generate() {
         digits.clear();
+        char ch;
+        while ((ch = getValue(rand.nextInt())) != '0');
         while (digits.size() != length) {
-            char ch = getValue(rand.nextInt(chars));
             digits.add(ch);
+            ch = getValue(rand.nextInt(chars));
         }
         num = new Character[length];
         digits.toArray(num);
@@ -56,8 +58,8 @@ class BullAndCows {
                     cows + " cow" + (cows > 1 ? "s." : ".");
         }
     }
-    public BullAndCows(int length) {
-        this.chars = 10;
+    public BullAndCows(int length, int chars) {
+        this.chars = chars;
         this.length = length;
         digits = new LinkedHashSet<>();
         generate();
@@ -66,17 +68,29 @@ class BullAndCows {
         return digits.toString().substring(1, length * 3 - 1)
                 .replaceAll(", ", "");
     }
+    public String getStartMsg() {
+        StringBuilder msg = new StringBuilder();
+        msg.append("The secret is prepared: ").append("*".repeat(length)).append(" (0-");
+        if (chars <= 10) {
+            msg.append(chars - 1).append(").");
+        } else {
+            msg.append("9, a-").append(getValue(chars - 1)).append(").");
+        }
+        return msg.toString();
+    }
 }
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Please, enter the secret code's length:");
         int length = sc.nextInt();
-        if (length > 10) {
+        System.out.println("Input the number of possible symbols in the code:");
+        int chars = sc.nextInt();
+        if (length > 36) {
             System.out.printf("Error: can't generate a secret number with a length of %d because there aren't enough unique digits.", length);
         } else {
-            BullAndCows numberCheck = new BullAndCows(length);
-//            System.out.println("The secret code is prepared: ****.");
+            BullAndCows numberCheck = new BullAndCows(length, chars);
+            System.out.println(numberCheck.getStartMsg());
             System.out.println("Okay, let's start a game!");
             String ending = length + " bulls.";
             String res;
