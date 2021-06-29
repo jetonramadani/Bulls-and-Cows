@@ -5,9 +5,9 @@ import java.util.*;
 class BullAndCows {
     private static final Random rand = new Random();
     private Character[] num;
-    private LinkedHashSet<Character> digits;
-    private int chars;
-    private int length;
+    private final LinkedHashSet<Character> digits;
+    private final int chars;
+    private final int length;
     private char getValue(int i) {
         if (i < 10) {
             return (char) ('0' + i);
@@ -18,7 +18,9 @@ class BullAndCows {
     private void generate() {
         digits.clear();
         char ch;
-        while ((ch = getValue(rand.nextInt())) != '0');
+        do {
+            ch = getValue(rand.nextInt(chars));
+        } while (ch != '0');
         while (digits.size() != length) {
             digits.add(ch);
             ch = getValue(rand.nextInt(chars));
@@ -58,16 +60,20 @@ class BullAndCows {
                     cows + " cow" + (cows > 1 ? "s." : ".");
         }
     }
-    public BullAndCows(int length, int chars) {
+    public BullAndCows(int length, int chars) throws Exception {
+        if (chars > 36) {
+            throw new Exception("Error: maximum number of possible symbols in the code is 36 (0-9, a-z).");
+        } else if (length <= 0) {
+            throw new Exception("Error minimum length of the word should be 0");
+        } else if (chars < length) {
+            throw new Exception(String.format("\"Error: it's not possible to generate a code with a length of %d with %d unique symbols.", length, chars));
+        }
         this.chars = chars;
         this.length = length;
         digits = new LinkedHashSet<>();
         generate();
     }
-    public String getNum() {
-        return digits.toString().substring(1, length * 3 - 1)
-                .replaceAll(", ", "");
-    }
+
     public String getStartMsg() {
         StringBuilder msg = new StringBuilder();
         msg.append("The secret is prepared: ").append("*".repeat(length)).append(" (0-");
@@ -79,16 +85,22 @@ class BullAndCows {
         return msg.toString();
     }
 }
+
 public class Main {
+    public static int parsedInt(String number) throws Exception {
+        try {
+            return Integer.parseInt(number);
+        } catch (NumberFormatException e) {
+            throw new Exception(String.format("Error: \"%s\" isn't a valid number.", number));
+        }
+    }
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Please, enter the secret code's length:");
-        int length = sc.nextInt();
-        System.out.println("Input the number of possible symbols in the code:");
-        int chars = sc.nextInt();
-        if (length > 36) {
-            System.out.printf("Error: can't generate a secret number with a length of %d because there aren't enough unique digits.", length);
-        } else {
+        try {
+            System.out.println("Please, enter the secret code's length:");
+            int length = parsedInt(sc.next());
+            System.out.println("Input the number of possible symbols in the code:");
+            int chars = parsedInt(sc.next());
             BullAndCows numberCheck = new BullAndCows(length, chars);
             System.out.println(numberCheck.getStartMsg());
             System.out.println("Okay, let's start a game!");
@@ -103,6 +115,8 @@ public class Main {
                 System.out.println("Grade: " + res);
             } while(!res.equals(ending));
             System.out.println("Congratulations! You guessed the secret code.");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 }
